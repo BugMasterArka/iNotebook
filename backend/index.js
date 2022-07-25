@@ -24,6 +24,6 @@ app.get('/', (req, res) => {
 })
 // listener function for server
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`iNotebook backend listening on port ${port}`)
 })
 
