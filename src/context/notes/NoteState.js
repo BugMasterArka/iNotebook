@@ -4,59 +4,24 @@ import NoteContext from './noteContext';
 
 const NoteState = (props)=>{
 
-    const notesInitial = [
-        {
-            "_id": "62debd36d605a94582fac889",
-            "user": "62dd060e5e554157a4a9d401",
-            "title": "Be humble",
-            "description": "Kendrick Lamar",
-            "tag": "music",
-            "date": "2022-07-25T15:56:38.948Z",
-            "__v": 0
-            },
-            {
-            "_id": "62de7d5ed605a94582fac872",
-            "user": "62dd060e5e554157a4a9d401",
-            "title": "Be humble",
-            "description": "Kendrick Lamar",
-            "tag": "music",
-            "date": "2022-07-25T15:57:18.331Z",
-            "__v": 0
-            },
-            {
-            "_id": "62debd5ed605a91582fac874",
-            "user": "62dd060e5e554157a4a9d401",
-            "title": "Be humble",
-            "description": "Kendrick Lamar",
-            "tag": "music",
-            "date": "2022-07-25T15:57:18.551Z",
-            "__v": 0
-            },
-            {
-            "_id": "62debd5e4605a94582fac876",
-            "user": "62dd060e5e554157a4a9d401",
-            "title": "Be humble",
-            "description": "Kendrick Lamar",
-            "tag": "music",
-            "date": "2022-07-25T15:57:18.732Z",
-            "__v": 0
-            },
-            {
-            "_id": "62debd5ed605a54582fac878",
-            "user": "62dd060e5e554157a4a9d401",
-            "title": "Be humble",
-            "description": "Kendrick Lamar",
-            "tag": "music",
-            "date": "2022-07-25T15:57:18.925Z",
-            "__v": 0
-            }
-        ];
+    const host = "http://localhost:5000";
+
+    const notesInitial = [];
 
 const [notes, setNotes] = useState(notesInitial);
 
 // add a note
-const addNote = (title, description, tag)=>{
+const addNote = async (title, description, tag)=>{
     // TODO: Api call
+    const response = await fetch(`${host}/api/notes/addnote`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJkZDA2MGU1ZTU1NDE1N2E0YTlkNDAxIn0sImlhdCI6MTY1ODY3NDU5Nn0.W7s3DGJkPJptSn89VB_GPAHGMhoin0vlglQH_MPwXBk'
+        },
+        body: JSON.stringify({title,description,tag})
+    });
+
     console.log("Adding a new Note");
     let note = {
         "_id": "62debd5ed605a54582fac878",
@@ -79,13 +44,37 @@ const deleteNote = (id)=>{
 }
 
 // edit a note
-const editNote = (id,title,description,tag)=>{
+const editNote = async (id,title,description,tag)=>{
 
+    // TODO: APi call
+    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJkZDA2MGU1ZTU1NDE1N2E0YTlkNDAxIn0sImlhdCI6MTY1ODY3NDU5Nn0.W7s3DGJkPJptSn89VB_GPAHGMhoin0vlglQH_MPwXBk'
+        },
+        body: JSON.stringify({title,description,tag})
+    });
+    const json =  response.json();
+};
+
+// get all notes
+const getNotes = async ()=>{
+
+    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJkZDA2MGU1ZTU1NDE1N2E0YTlkNDAxIn0sImlhdCI6MTY1ODY3NDU5Nn0.W7s3DGJkPJptSn89VB_GPAHGMhoin0vlglQH_MPwXBk'
+        }
+    });
+    const json = await response.json();
+    setNotes(json);
 };
 
 
     return (
-        <NoteContext.Provider value={{notes, addNote, deleteNote, editNote}}> 
+        <NoteContext.Provider value={{notes, addNote, deleteNote, editNote, getNotes}}> 
             {props.children}
         </NoteContext.Provider>
     );

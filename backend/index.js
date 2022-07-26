@@ -4,6 +4,8 @@ const connectToMongo = require('./db');
 const express = require('express');
 // const bodyParser = require('body-parser');
 
+const cors = require('cors');
+
 // functions that connects to mongo
 connectToMongo();
 
@@ -14,6 +16,7 @@ const port = 5000
 // app.use(bodyParser.urlencoded({extended: true}));
 // taking only json input 
 app.use(express.json());
+app.use(cors());
 
 // Available routes
 app.use('/api/auth',require('./routes/auth'))
