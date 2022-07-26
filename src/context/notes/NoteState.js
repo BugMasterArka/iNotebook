@@ -6,9 +6,7 @@ const NoteState = (props)=>{
 
     const host = "http://localhost:5000";
 
-    const notesInitial = [];
-
-const [notes, setNotes] = useState(notesInitial);
+const [notes, setNotes] = useState([]);
 
 // add a note
 const addNote = async (title, description, tag)=>{
@@ -22,22 +20,34 @@ const addNote = async (title, description, tag)=>{
         body: JSON.stringify({title,description,tag})
     });
 
+    console.log(response);
+
     console.log("Adding a new Note");
     let note = {
-        "_id": "62debd5ed605a54582fac878",
-        "user": "62dd060e5e554157a4a9d401",
+        "_id": response._id,
+        "user": response.user,
         "title": title,
         "description": description,
         "tag": tag,
-        "date": "2022-07-25T15:57:18.925Z",
+        "date": response.date,
         "__v": 0
         };
     setNotes(notes.concat(note));
 };
 
 // delete a note
-const deleteNote = (id)=>{
+const deleteNote = async (id)=>{
     // TODO: API call
+    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJkZDA2MGU1ZTU1NDE1N2E0YTlkNDAxIn0sImlhdCI6MTY1ODY3NDU5Nn0.W7s3DGJkPJptSn89VB_GPAHGMhoin0vlglQH_MPwXBk'
+        }
+    });
+    const json =  await response.json();
+    console.log(json);
+
     console.log("Deleting note with id "+id);
     const newNotes = notes.filter((note)=>{return note._id!==id});
     setNotes(newNotes);
@@ -56,6 +66,7 @@ const editNote = async (id,title,description,tag)=>{
         body: JSON.stringify({title,description,tag})
     });
     const json =  response.json();
+    console.log(json);
 };
 
 // get all notes
