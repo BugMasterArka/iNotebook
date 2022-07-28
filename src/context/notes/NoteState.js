@@ -22,7 +22,7 @@ const addNote = async (title, description, tag)=>{
 
     console.log(response);
 
-    // console.log("Adding a new Note");
+    // for the frontend
     let note = {
         "_id": response._id,
         "user": response.user,
